@@ -161,6 +161,7 @@ public class DersProgrami extends JFrame {
 
     private void saveToDB(String[] saatler, String[] gunler) {
         try (Connection conn = DBUtil.getConnection()) {
+              conn.setAutoCommit(false);
             String sql = "INSERT INTO DersProgrami (Alan,Gun,Saat,Ders) VALUES (?,?,?,?) " +
                          "ON DUPLICATE KEY UPDATE Ders=?";
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -177,6 +178,7 @@ public class DersProgrami extends JFrame {
                 }
                 ps.executeBatch();
             }
+            conn.commit();
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Veritabanına kaydedilirken hata oluştu!");
